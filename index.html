@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>F1 Team Principal Sorting Hat</title>
     <style>
-        :root { --f1-red: #e10600; --dark: #15151e; --light: #f3f3f3; --console-bg: #000; --console-text: #00ff00; }
+        :root { --f1-red: #e10600; --dark: #15151e; --light: #f3f3f3; }
         body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--dark); color: var(--light); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         .container { background: #1f1f2e; max-width: 600px; width: 100%; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-top: 5px solid var(--f1-red); }
         h1 { text-align: center; color: #fff; font-size: 24px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
@@ -25,15 +25,8 @@
         .principal-team { font-size: 18px; color: #fff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
         .archetype { background: #333; display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 14px; margin-bottom: 20px; color: #ccc; }
         .desc { font-size: 16px; color: #ccc; line-height: 1.6; margin-bottom: 30px; text-align: left; background: #252535; padding: 20px; border-radius: 8px; }
-        .restart-btn { background: #fff; color: var(--f1-red); font-weight: bold; text-align: center; border: none; padding: 15px 30px; font-size: 16px; border-radius: 30px; cursor: pointer; margin-bottom: 30px; }
+        .restart-btn { background: #fff; color: var(--f1-red); font-weight: bold; text-align: center; border: none; padding: 15px 30px; font-size: 16px; border-radius: 30px; cursor: pointer; margin-bottom: 10px; }
         .restart-btn:hover { background: #eee; }
-
-        /* Telemetry Log Styles */
-        .telemetry-box { background-color: var(--console-bg); border: 1px solid #333; padding: 15px; border-radius: 6px; text-align: left; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #ccc; margin-top: 20px; overflow-x: auto; }
-        .telemetry-title { color: var(--f1-red); font-weight: bold; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .log-entry { margin-bottom: 5px; border-bottom: 1px solid #222; padding-bottom: 2px; }
-        .log-key { color: #888; }
-        .log-val { color: var(--console-text); }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -60,11 +53,6 @@
         <div class="desc" id="res-desc"></div>
         
         <button class="restart-btn" onclick="location.reload()">Sort Another Person</button>
-
-        <div class="telemetry-box">
-            <div class="telemetry-title">/// TELEMETRY DATA LOG ///</div>
-            <div id="telemetry-content"></div>
-        </div>
     </div>
 </div>
 
@@ -213,7 +201,7 @@
         document.getElementById('res-arch').innerText = p.arch;
         document.getElementById('res-desc').innerText = p.desc;
 
-        // --- NEW: SEND DATA TO FORMSPREE ---
+        // --- SEND DATA TO FORMSPREE (Hidden from User) ---
         const data = {
             Principal: p.name,
             Team: p.team,
@@ -221,7 +209,7 @@
             Answers: userAnswers.join(", ")
         };
 
-        // Your specific Formspree URL is below
+        // Your specific Formspree URL
         fetch("https://formspree.io/f/mpwvnkyg", {
             method: "POST",
             headers: {
@@ -231,27 +219,6 @@
         })
         .then(response => console.log("Data sent to Formspree"))
         .catch(error => console.error("Error sending data:", error));
-
-        // Visual Log (Telemetry)
-        const logContainer = document.getElementById('telemetry-content');
-        let logHTML = "";
-        
-        questions.forEach((q, index) => {
-            const chosenLetter = userAnswers[index];
-            const chosenOption = q.o.find(opt => opt.v === chosenLetter);
-            
-            logHTML += `<div class="log-entry">
-                <span class="log-key">Q${index + 1} [${chosenLetter}]:</span> 
-                <span class="log-val">${chosenOption.t}</span>
-            </div>`;
-        });
-        
-        logHTML += `<div class="log-entry" style="margin-top:10px; border-top: 1px dashed #666; padding-top:5px;">
-            <span class="log-key">MATCH > </span> 
-            <span class="log-val" style="color:var(--f1-red); font-weight:bold">${p.name}</span>
-        </div>`;
-
-        logContainer.innerHTML = logHTML;
     }
 
     renderQuestion();
