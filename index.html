@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Team Principal Sorting Hat</title>
+    <style>
+        :root { --f1-red: #e10600; --dark: #15151e; --light: #f3f3f3; --console-bg: #000; --console-text: #00ff00; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--dark); color: var(--light); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: #1f1f2e; max-width: 600px; width: 100%; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-top: 5px solid var(--f1-red); }
+        h1 { text-align: center; color: #fff; font-size: 24px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        .subtitle { text-align: center; color: #aaa; margin-bottom: 30px; font-size: 14px; }
+        .question-card { display: none; animation: fadeIn 0.5s; }
+        .question-card.active { display: block; }
+        .question-text { font-size: 18px; font-weight: bold; margin-bottom: 20px; line-height: 1.4; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        button { background: #2c2c3c; border: 1px solid #444; color: white; padding: 15px; text-align: left; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 15px; line-height: 1.4; }
+        button:hover { background: var(--f1-red); border-color: var(--f1-red); transform: translateX(5px); }
+        .progress { height: 4px; background: #333; margin-top: 20px; border-radius: 2px; }
+        .progress-bar { height: 100%; background: var(--f1-red); width: 0%; transition: width 0.3s; }
+        
+        /* Result Styles */
+        #result-screen { display: none; text-align: center; }
+        .principal-name { font-size: 32px; font-weight: bold; color: var(--f1-red); margin: 20px 0 10px 0; }
+        .principal-team { font-size: 18px; color: #fff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+        .archetype { background: #333; display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 14px; margin-bottom: 20px; color: #ccc; }
+        .desc { font-size: 16px; color: #ccc; line-height: 1.6; margin-bottom: 30px; text-align: left; background: #252535; padding: 20px; border-radius: 8px; }
+        .restart-btn { background: #fff; color: var(--f1-red); font-weight: bold; text-align: center; border: none; padding: 15px 30px; font-size: 16px; border-radius: 30px; cursor: pointer; margin-bottom: 30px; }
+        .restart-btn:hover { background: #eee; }
+
+        /* Telemetry Log Styles */
+        .telemetry-box { background-color: var(--console-bg); border: 1px solid #333; padding: 15px; border-radius: 6px; text-align: left; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #ccc; margin-top: 20px; overflow-x: auto; }
+        .telemetry-title { color: var(--f1-red); font-weight: bold; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .log-entry { margin-bottom: 5px; border-bottom: 1px solid #222; padding-bottom: 2px; }
+        .log-key { color: #888; }
+        .log-val { color: var(--console-text); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="quiz-screen">
+        <h1>F1 Paddock Sorter</h1>
+        <p class="subtitle">Discover your Team Principal Identity</p>
+        
+        <div id="question-container"></div>
+        
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1>You are...</h1>
+        <div class="principal-name" id="res-name"></div>
+        <div class="principal-team" id="res-team"></div>
+        <div class="archetype" id="res-arch"></div>
+        <div class="desc" id="res-desc"></div>
+        
+        <button class="restart-btn" onclick="location.reload()">Sort Another Person</button>
+
+        <div class="telemetry-box">
+            <div class="telemetry-title">/// TELEMETRY DATA LOG ///</div>
+            <div id="telemetry-content"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            t: "Q1. The Midfield Trap: You need $50M to bridge the gap. How do you pitch it?",
+            o: [
+                {t: "A. The ROI Pitch (Glory)", v: "A"},
+                {t: "B. Efficiency Argument (Speed)", v: "B"},
+                {t: "C. Brain Drain (Facilities)", v: "C"},
+                {t: "D. Leapfrog Strategy (Risk)", v: "D"}
+            ]
+        },
+        {
+            t: "Q2. The Nightmare: What is your specific anxiety?",
+            o: [
+                {t: "A. Pit Stop Error (Amateurish)", v: "A"},
+                {t: "B. Financial Black Hole (Bankruptcy)", v: "B"},
+                {t: "C. The Mole (Betrayal)", v: "C"},
+                {t: "D. Correlation Deficit (Data Lying)", v: "D"}
+            ]
+        },
+        {
+            t: "Q3. The Summons: The FIA suspects illegal parts. You bring...",
+            o: [
+                {t: "A. The Loophole (Technical)", v: "A"},
+                {t: "B. A Lawyer (Threat)", v: "B"},
+                {t: "C. A Spreadsheet (Data)", v: "C"},
+                {t: "D. A Coffee (Diplomacy)", v: "D"}
+            ]
+        },
+        {
+            t: "Q4. The Cost Cap Crash: $1.2M damage. You...",
+            o: [
+                {t: "A. Spin It (Marketing Drama)", v: "A"},
+                {t: "B. Punish (Salary Deduction)", v: "B"},
+                {t: "C. Calculate (Show Math)", v: "C"},
+                {t: "D. Coach (Psychology)", v: "D"}
+            ]
+        },
+        {
+            t: "Q5. The Scandal: Rival is overspending. You...",
+            o: [
+                {t: "A. The Grenade (Leak to Press)", v: "A"},
+                {t: "B. The Protest (Formal Letter)", v: "B"},
+                {t: "C. The Mirror (Copy Them)", v: "C"},
+                {t: "D. The Blinders (Ignore)", v: "D"}
+            ]
+        },
+        {
+            t: "Q6. Recruitment: Budget is tight. Who do you hire?",
+            o: [
+                {t: "A. The Superstar (Expensive/Fast)", v: "A"},
+                {t: "B. The Rookie (Cheap/Future)", v: "B"},
+                {t: "C. The Veteran (Safe Points)", v: "C"},
+                {t: "D. The Maverick (Cash/Controversy)", v: "D"}
+            ]
+        },
+        {
+            t: "Q7. The Mistake: You messed up strategy. You...",
+            o: [
+                {t: "A. Don't Apologize (Authority)", v: "A"},
+                {t: "B. Public Shield (Take Blame)", v: "B"},
+                {t: "C. Protocol (Fix System)", v: "C"},
+                {t: "D. Emotional (Show Pain)", v: "D"}
+            ]
+        },
+        {
+            t: "Q8. Legacy: You want to be remembered as...",
+            o: [
+                {t: "A. The Winner (Trophies)", v: "A"},
+                {t: "B. The Builder (Machine)", v: "B"},
+                {t: "C. The Genius (Smartest)", v: "C"},
+                {t: "D. The Father Figure (Loved)", v: "D"}
+            ]
+        }
+    ];
+
+    const principals = [
+        {name: "Christian Horner", team: "Red Bull Racing", arch: "The Provocateur", traits: ["A","B","B","A","A","A","A","A"], desc: "You thrive on conflict. You use the media as a weapon, manage via authority, and care only about winning—even if it makes you the villain."},
+        {name: "Toto Wolff", team: "Mercedes", arch: "The Commander", traits: ["B","C","B","B","A","A","B","A"], desc: "You are intense and protective. You demand control and loyalty. You are not afraid to use lawyers, but you will publicly fall on your sword to shield your team."},
+        {name: "Fred Vasseur", team: "Ferrari", arch: "The Pragmatist", traits: ["C","A","D","B","D","A","D","D"], desc: "You diffuse pressure with humor. You prefer a coffee and a chat over a lawsuit. You build a family atmosphere to protect your team from the noise."},
+        {name: "Andrea Stella", team: "McLaren", arch: "The Professor", traits: ["C","D","C","C","D","B","C","D"], desc: "Calm, calculated, and data-driven. You hate confusion. You empower your people quietly and let the results speak for themselves."},
+        {name: "James Vowles", team: "Williams", arch: "The Architect", traits: ["D","B","C","D","B","B","C","B"], desc: "You are playing the long game. You value culture and systems over quick fixes. You are articulate, patient, and focused on the future."},
+        {name: "Flavio Briatore", team: "Alpine", arch: "The Maverick", traits: ["A","B","B","A","C","D","A","A"], desc: "Ruthless and flashy. You don't mind bending the rules or hiring controversial figures. For you, F1 is a show, and you are the star."},
+        {name: "Jonathan Wheatley", team: "Sauber / Audi", arch: "The Rule Master", traits: ["B","A","A","B","B","C","C","B"], desc: "Disciplined and operational. You know the rulebook better than the FIA. You are here to turn a messy team into a factory machine."},
+        {name: "Laurent Mekies", team: "Red Bull Racing", arch: "The Successor", traits: ["B","A","A","B","B","B","C","A"], desc: "Political but procedural. As a former FIA man, you value the rulebook and control. You are less aggressive than Horner, but just as ambitious."},
+        {name: "Alan Permane", team: "RB (Visa Cash App)", arch: "The Enforcer", traits: ["B","A","A","B","D","C","A","B"], desc: "The old-school operator. You fear incompetence and run a tight ship. You rarely apologize and prefer veteran drivers to get the job done."},
+        {name: "Ayao Komatsu", team: "Haas", arch: "The Realist", traits: ["B","B","C","C","D","C","C","B"], desc: "Efficiency is your religion. You have no budget for drama. You hire safe veterans, use spreadsheets, and focus strictly on survival."},
+        {name: "Andy Cowell", team: "Aston Martin", arch: "The Engineer", traits: ["D","A","C","C","D","A","C","C"], desc: "You are driven by technical superiority. You want to build the fastest machine possible and let the engineers run the show."}
+    ];
+
+    let currentQ = 0;
+    let userAnswers = [];
+
+    function renderQuestion() {
+        const q = questions[currentQ];
+        const container = document.getElementById('question-container');
+        container.innerHTML = `
+            <div class="question-card active">
+                <div class="question-text">${q.t}</div>
+                <div class="options">
+                    ${q.o.map(opt => `<button onclick="handleAnswer('${opt.v}')">${opt.t}</button>`).join('')}
+                </div>
+            </div>
+        `;
+        document.getElementById('progress-bar').style.width = ((currentQ / questions.length) * 100) + "%";
+    }
+
+    function handleAnswer(val) {
+        userAnswers.push(val);
+        currentQ++;
+        if (currentQ < questions.length) {
+            renderQuestion();
+        } else {
+            calculateResult();
+        }
+    }
+
+    function calculateResult() {
+        let bestMatch = null;
+        let highestScore = -1;
+
+        principals.forEach(p => {
+            let score = 0;
+            for (let i = 0; i < 8; i++) {
+                if (userAnswers[i] === p.traits[i]) score++;
+            }
+            if (score > highestScore) {
+                highestScore = score;
+                bestMatch = p;
+            }
+        });
+
+        showResult(bestMatch);
+    }
+
+    function showResult(p) {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        
+        // Show result on screen
+        document.getElementById('res-name').innerText = p.name;
+        document.getElementById('res-team').innerText = p.team;
+        document.getElementById('res-arch').innerText = p.arch;
+        document.getElementById('res-desc').innerText = p.desc;
+
+        // --- NEW: SEND DATA TO FORMSPREE ---
+        const data = {
+            Principal: p.name,
+            Team: p.team,
+            Archetype: p.arch,
+            Answers: userAnswers.join(", ")
+        };
+
+        // Your specific Formspree URL is below
+        fetch("https://formspree.io/f/mpwvnkyg", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => console.log("Data sent to Formspree"))
+        .catch(error => console.error("Error sending data:", error));
+
+        // Visual Log (Telemetry)
+        const logContainer = document.getElementById('telemetry-content');
+        let logHTML = "";
+        
+        questions.forEach((q, index) => {
+            const chosenLetter = userAnswers[index];
+            const chosenOption = q.o.find(opt => opt.v === chosenLetter);
+            
+            logHTML += `<div class="log-entry">
+                <span class="log-key">Q${index + 1} [${chosenLetter}]:</span> 
+                <span class="log-val">${chosenOption.t}</span>
+            </div>`;
+        });
+        
+        logHTML += `<div class="log-entry" style="margin-top:10px; border-top: 1px dashed #666; padding-top:5px;">
+            <span class="log-key">MATCH > </span> 
+            <span class="log-val" style="color:var(--f1-red); font-weight:bold">${p.name}</span>
+        </div>`;
+
+        logContainer.innerHTML = logHTML;
+    }
+
+    renderQuestion();
+
+</script>
+</body>
+</html>
