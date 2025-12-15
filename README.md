@@ -1,4 +1,4 @@
-# 🏎️ F1 Team Principal Sorting Quiz
+# 🏎️ F1 Team Principal Sorting Hat
 
 > "The Paddock chooses the wizard, Mr. Potter."
 
@@ -6,34 +6,47 @@ A logic-based personality quiz that sorts you into your matching **Formula 1 Tea
 
 ### 🔴 **[Play the Live Quiz Here](https://marcfield23.github.io/F1-Sorting-Quiz/)** 🔴
 
+![Project Status](https://img.shields.io/badge/Status-Live-success) ![License](https://img.shields.io/badge/License-MIT-blue)
+
+---
+
+## 📊 Community Stats (N=50)
+*Updated: Dec 15, 2025*
+
+Based on the first wave of submissions, the F1 fan community is surprisingly intellectual!
+* 🥇 **Most Common Result:** **Andrea Stella** (22%) – *The Professor*
+* 🥈 **Second Place:** **James Vowles** (20%) – *The Architect*
+* 👻 **Rarest Result:** **Flavio Briatore** (0%) – *The Maverick* (Nobody has been chaotic enough to unlock him yet!)
+
 ---
 
 ## ⚙️ How It Works
 This is a Single Page Application (SPA) built with:
 * **Frontend:** HTML5, CSS3, Vanilla JavaScript.
 * **Logic:** A "closest-match" algorithm that compares your 8 answers against the psychological profiles of 11 real-world F1 Principals.
-* **Backend:** Integration with [Formsubmit](formsubmit.co) to capture and log user results anonymously.
+* **Backend:** Integration with **FormSubmit.co** (via secure Token) to capture results anonymously without a backend server.
+* **Privacy:** No personal data is stored. User email addresses are not required.
 
 ---
 
 ## 🔐 The Master Key (Permutations)
-Want to know how to unlock a specific character? The algorithm looks for the **exact sequence** of traits below.
+Want to know how the algorithm decides? It looks for specific trait sequences.
 
 *SPOILER WARNING: The table below reveals the exact answers needed for each result.*
 
-| Team Principal | Team | The "Perfect Run" Sequence (Q1–Q8) |
+| Team Principal | Archetype | The "Perfect Run" Sequence (Q1–Q8) |
 | :--- | :--- | :--- |
-| **Christian Horner** | Red Bull Racing | `A - B - B - A - A - A - A - A` |
-| **Toto Wolff** | Mercedes | `B - C - B - B - A - A - B - A` |
-| **Frédéric Vasseur** | Ferrari | `C - A - D - B - D - A - D - D` |
-| **Andrea Stella** | McLaren | `C - D - C - C - D - B - C - D` |
-| **James Vowles** | Williams | `D - B - C - D - B - B - C - B` |
-| **Flavio Briatore** | Alpine | `A - B - B - A - C - D - A - A` |
-| **Jonathan Wheatley** | Sauber / Audi | `B - A - A - B - B - C - C - B` |
-| **Laurent Mekies** | RB (VCARB) | `B - A - A - B - B - B - C - A` |
-| **Alan Permane** | RB (VCARB) | `B - A - A - B - D - C - A - B` |
-| **Ayao Komatsu** | Haas | `B - B - C - C - D - C - C - B` |
-| **Andy Cowell** | Aston Martin | `D - A - C - C - D - A - C - C` |
+| **Christian Horner** | The Provocateur | `A - B - B - A - A - A - A - A` |
+| **Toto Wolff** | The Commander | `B - C - B - B - A - A - B - A` |
+| **Frédéric Vasseur** | The Pragmatist | `C - A - D - B - D - A - D - D` |
+| **Andrea Stella** | The Professor | `C - D - C - C - D - B - C - D` |
+| **James Vowles** | The Architect | `D - B - C - D - B - B - C - B` |
+| **Flavio Briatore** | The Maverick | `A - B - B - A - C - D - A - A` |
+| **Jonathan Wheatley** | The Rule Master | `B - A - A - B - B - C - C - B` |
+| **Laurent Mekies** | The Successor | `B - A - A - B - B - B - C - A` |
+| **Alan Permane** | The Enforcer | `B - A - A - B - D - C - A - B` |
+| **Ayao Komatsu** | The Realist | `B - B - C - C - D - C - C - B` |
+| **Andy Cowell** | The Engineer | `D - A - C - C - D - A - C - C` |
 
 ### **The Question Key:**
 * **Q1:** Focus (ROI vs Efficiency vs Culture vs Leapfrog)
@@ -48,18 +61,22 @@ Want to know how to unlock a specific character? The algorithm looks for the **e
 ---
 
 ## 🛠️ Installation / Forking
-If you want to host your own version:
+If you want to host your own version of this quiz:
 
 1.  **Clone the repo:**
     ```bash
     git clone [https://github.com/marcfield23/F1-Sorting-Quiz.git](https://github.com/marcfield23/F1-Sorting-Quiz.git)
     ```
 2.  **Update the Backend:**
-    * Create a free account at [Formspree](https://formspree.io).
-    * Create a new form and copy your `https://formspree.io/f/xv...` URL.
-    * Open `index.html` and replace the fetch URL in the `showResult()` function.
+    * This project uses [FormSubmit.co](https://formsubmit.co) for the backend.
+    * Go to their site, enter your email, and get your **Random Token** (e.g., `98d24b...`).
+    * *Do not put your raw email in the code!*
+    * Open `index.html` and replace the fetch URL in the `showResult()` function:
+    ```javascript
+    fetch("[https://formsubmit.co/ajax/YOUR_TOKEN_HERE](https://formsubmit.co/ajax/YOUR_TOKEN_HERE)", ...
+    ```
 3.  **Host it:**
-    * Upload to GitHub Pages or Netlify Drop.
+    * Upload to GitHub Pages or Netlify.
 
 ---
 
