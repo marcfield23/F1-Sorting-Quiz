@@ -12,7 +12,7 @@ A logic-based personality quiz that sorts you into your matching **Formula 1 Tea
 This is a Single Page Application (SPA) built with:
 * **Frontend:** HTML5, CSS3, Vanilla JavaScript.
 * **Logic:** A "closest-match" algorithm that compares your 8 answers against the psychological profiles of 11 real-world F1 Principals.
-* **Backend:** Integration with [Formspree](https://formspree.io) to capture and log user results anonymously.
+* **Backend:** Integration with [Formsubmit](formsubmit.co) to capture and log user results anonymously.
 
 ---
 
