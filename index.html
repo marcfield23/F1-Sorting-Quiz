@@ -153,7 +153,7 @@
         {name: "James Vowles", team: "Williams", arch: "The Architect", traits: ["D","B","C","D","B","B","C","B"], desc: "You are playing the long game. You value culture and systems over quick fixes. You are articulate, patient, and focused on the future."},
         {name: "Flavio Briatore", team: "Alpine", arch: "The Maverick", traits: ["A","B","B","A","C","D","A","A"], desc: "Ruthless and flashy. You don't mind bending the rules or hiring controversial figures. For you, F1 is a show, and you are the star."},
         {name: "Jonathan Wheatley", team: "Sauber / Audi", arch: "The Rule Master", traits: ["B","A","A","B","B","C","C","B"], desc: "Disciplined and operational. You know the rulebook better than the FIA. You are here to turn a messy team into a factory machine."},
-        {name: "Laurent Mekies", team: "RB (Visa Cash App)", arch: "The Successor", traits: ["B","A","A","B","B","B","C","A"], desc: "Political but procedural. As a former FIA man, you value the rulebook and control. You are less aggressive than Horner, but just as ambitious."},
+        {name: "Laurent Mekies", team: "Red Bull Racing", arch: "The Successor", traits: ["B","A","A","B","B","B","C","A"], desc: "Political but procedural. As a former FIA man, you value the rulebook and control. You are less aggressive than Horner, but just as ambitious."},
         {name: "Alan Permane", team: "RB (Visa Cash App)", arch: "The Enforcer", traits: ["B","A","A","B","D","C","A","B"], desc: "The old-school operator. You fear incompetence and run a tight ship. You rarely apologize and prefer veteran drivers to get the job done."},
         {name: "Ayao Komatsu", team: "Haas", arch: "The Realist", traits: ["B","B","C","C","D","C","C","B"], desc: "Efficiency is your religion. You have no budget for drama. You hire safe veterans, use spreadsheets, and focus strictly on survival."},
         {name: "Andy Cowell", team: "Aston Martin", arch: "The Engineer", traits: ["D","A","C","C","D","A","C","C"], desc: "You are driven by technical superiority. You want to build the fastest machine possible and let the engineers run the show."}
@@ -214,7 +214,7 @@
         document.getElementById('res-arch').innerText = p.arch;
         document.getElementById('res-desc').innerText = p.desc;
 
-        // --- SEND DATA TO FORMSPREE (Hidden from User) ---
+        // --- SEND DATA TO FORMSUBMIT (Hidden from User) ---
         const data = {
             Principal: p.name,
             Team: p.team,
@@ -222,15 +222,17 @@
             Answers: userAnswers.join(", ")
         };
 
-        // Your specific Formspree URL
-        fetch("https://formspree.io/f/mpwvnkyg", {
+        // Your email goes here (FormSubmit.co)
+        // IMPORTANT: Use the /ajax/ part so it doesn't redirect users away from your quiz
+        fetch("https://formsubmit.co/ajax/f1.fantasy.hat@gmail.com", {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify(data)
         })
-        .then(response => console.log("Data sent to Formspree"))
+        .then(response => console.log("Data sent to FormSubmit"))
         .catch(error => console.error("Error sending data:", error));
     }
 
