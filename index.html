@@ -214,7 +214,7 @@
         document.getElementById('res-arch').innerText = p.arch;
         document.getElementById('res-desc').innerText = p.desc;
 
-        // --- SEND DATA TO FORMSUBMIT (Hidden from User) ---
+        // --- SEND DATA TO FORMSUBMIT (Secured) ---
         const data = {
             Principal: p.name,
             Team: p.team,
@@ -222,9 +222,8 @@
             Answers: userAnswers.join(", ")
         };
 
-        // Your email goes here (FormSubmit.co)
-        // IMPORTANT: Use the /ajax/ part so it doesn't redirect users away from your quiz
-        fetch("https://formsubmit.co/ajax/f1.fantasy.hat@gmail.com", {
+        // Replaced email with SECURE TOKEN
+        fetch("https://formsubmit.co/ajax/98d24b5324c76abae8703ba4bae021c7", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
